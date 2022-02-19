@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
+import User from './components/users/User';
 import Search from './components/users/Search';
 import About from './components/pages/About';
 import { Alert } from './components/layout/Alert';
@@ -59,7 +60,7 @@ class App extends Component {
   };
 
   render() {
-    const { users, loading } = this.state;
+    const { users, user, loading } = this.state;
 
     return (
       <Router>
@@ -68,9 +69,9 @@ class App extends Component {
           <div className='container'>
             <Alert alert={this.state.alert} />
             <Routes>
-              {/* <Route
+              <Route
                 path='/'
-                element={(props) => (
+                element={
                   <Fragment>
                     <Search
                       searchUsers={this.searchUsers}
@@ -80,20 +81,22 @@ class App extends Component {
                     />
                     <Users loading={loading} users={users} />
                   </Fragment>
-                )}
-              /> */}
-              <Route path='/about' element={<About />} />
-            </Routes>
-
-            <Fragment>
-              <Search
-                searchUsers={this.searchUsers}
-                clearUsers={this.clearUsers}
-                showClear={users.length > 0 ? true : false}
-                setAlert={this.setAlert}
+                }
               />
-              <Users loading={loading} users={users} />
-            </Fragment>
+              <Route path='/about' element={<About />} />
+              <Route
+                path='/user/:login'
+                element={<User />}
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUser={this.getUser}
+                    user={user}
+                    loading={loading}
+                  />
+                )}
+              />
+            </Routes>
           </div>
         </div>
       </Router>

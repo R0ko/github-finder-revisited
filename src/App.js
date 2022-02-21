@@ -14,6 +14,7 @@ const App = () => {
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [repos, setUserRepos] = useState([]);
 
   // Search Github users
   const searchUsers = async (text) => {
@@ -24,6 +25,18 @@ const App = () => {
     );
 
     setUsers(res.data.items);
+    setLoading(false);
+  };
+
+  // Get user repos
+  const getUserRepos = async (username) => {
+    setLoading(true);
+
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id=${process.env.REACT_APP_GITHUB_CLIENT_ID}&client_secret=${process.env.REACT_APP_GITHUB_SECRET_ID}`
+    );
+
+    setUserRepos(res.data);
     setLoading(false);
   };
 
@@ -75,7 +88,15 @@ const App = () => {
             <Route path='/about' element={<About />} />
             <Route
               path='/user/:login'
-              element={<User getUser={getUser} user={user} loading={loading} />}
+              element={
+                <User
+                  getUser={getUser}
+                  user={user}
+                  loading={loading}
+                  getUserRepos={getUserRepos}
+                  repos={repos}
+                />
+              }
             />
           </Routes>
         </div>

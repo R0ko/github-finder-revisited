@@ -3,12 +3,14 @@ import Spinner from '../layout/Spinner';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import Repos from '../repos/Repos';
 
 const User = ({ user, loading, getUser, getUserRepos, repos }) => {
   const params = useParams();
 
   useEffect(() => {
     getUser(params.login);
+    getUserRepos(params.login);
     // eslint-disable-next-line
   }, []);
 
@@ -32,17 +34,19 @@ const User = ({ user, loading, getUser, getUserRepos, repos }) => {
 
   return (
     <Fragment>
-      {name}
       <Link to='/' className='btn btn-light'>
         Back to Search
       </Link>
-      Hireable: {''}
-      {{ hireable } ? 'yes' : 'no'}
+
       <div className='card grid-2'>
         <div className='all-center'>
           <img src={avatar_url} alt='' style={{ width: '150px' }} />
           <h1>{name}</h1>
           <p>Location: {location}</p>
+          <p>
+            Hireable:
+            {{ hireable } ? 'yes' : 'no'}
+          </p>
         </div>
         <div>
           {bio && (
@@ -88,6 +92,7 @@ const User = ({ user, loading, getUser, getUserRepos, repos }) => {
         <div className='badge badge-light'>Repos: {public_repos}</div>
         <div className='badge badge-dark'>Gists: {public_gists}</div>
       </div>
+      <Repos repos={repos} />
     </Fragment>
   );
 };
@@ -96,6 +101,8 @@ User.propTypes = {
   loading: PropTypes.bool,
   user: PropTypes.object.isRequired,
   getUser: PropTypes.func.isRequired,
+  getUserRepos: PropTypes.func.isRequired,
+  repos: PropTypes.array.isRequired,
 };
 
 export default User;
